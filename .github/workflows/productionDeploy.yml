@@ -32,6 +32,7 @@ jobs:
       with:
         azcliversion: latest
         inlineScript: |
+          az account set --subscription ${{ secrets.SUBS_ID }}
           az group create --name ${{ env.rg_name }} --location ${{ env.location }}
           az storage account create --name ${{ env.sa_name }} --location ${{ env.location }} --resource-group ${{ env.rg_name }} --sku Standard_LRS
           az monitor app-insights component create --app ${{ env.ai_name }} --location ${{ env.location }} --resource-group ${{ env.rg_name }} --retention-time 30
