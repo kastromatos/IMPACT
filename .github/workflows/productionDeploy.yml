@@ -33,8 +33,8 @@ jobs:
         azcliversion: latest
         inlineScript: |
           az group create --name ${{ env.rg_name }} --location ${{ env.location }}
-          az storage account create --name ${{ env.sa_name }} --location ${{ env.location }} --resource-group ${{ env.rg_name }} --subscription ${{ secrets.SUBS_ID }} --sku Standard_LRS
-          # az monitor app-insights component create --app ${{ env.ai_name }} --location ${{ env.location }} --resource-group ${{ env.rg_name }} --retention-time 30
+          az storage account create --name ${{ env.sa_name }} --location ${{ env.location }} --resource-group ${{ env.rg_name }} --sku Standard_LRS
+          az monitor app-insights component create --app ${{ env.ai_name }} --location ${{ env.location }} --resource-group ${{ env.rg_name }} --retention-time 30
           # az functionapp create --name ${{ env.af_name }} --resource-group ${{ env.rg_name }} --storage-account ${{ env.sa_name }}
           # az monitor app-insights component connect-function --resource-group ${{ env.rg_name }} --app ${{ env.ai_name }} --function ${{ env.af_name }}
 
