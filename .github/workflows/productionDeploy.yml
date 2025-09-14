@@ -32,6 +32,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v5
+      name: Checkout
   
     - name: Login to Azure using OIDC
       uses: azure/login@v2
@@ -56,3 +58,4 @@ jobs:
 
     - run: func azure functionapp publish ${{ env.af_name }} --csharp
       working-directory: Tenders
+      name: Deploy
