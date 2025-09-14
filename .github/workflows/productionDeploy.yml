@@ -11,7 +11,7 @@ env:
   rg_name: impcat
   sa_name: impactuniquesa
   ai_name: impactinsight
-  af_name: impactfunction
+  af_name: impactfunctionwithuniquename
 
 jobs:
   deploy:
