@@ -10,7 +10,7 @@ env:
   location: polandcentral
   rg_name: impcat
   sa_name: impactuniquesa
-  ai_name: impactinsight
+  # ai_name: impactinsight
   af_name: impactfunctionwithuniquename
 
 jobs:
@@ -52,6 +52,7 @@ jobs:
           # az monitor app-insights component connect-function --resource-group ${{ env.rg_name }} --app ${{ env.ai_name }} --function ${{ env.af_name }}
 
     - run: sudo apt-get install azure-functions-core-tools-4
-      name: TryInstall
+      name: Install core tools
 
-    - run: func --version
+    - run: func azure functionapp publish ${{ env.af_name }} --csharp
+      working-directory: Tenders
