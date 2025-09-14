@@ -15,7 +15,7 @@ namespace Tenders
         }
 
         [Function("TendersList")]
-        public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get", Route = "tenders")] HttpRequest req)
+        public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "tenders")] HttpRequest req)
         {
             _logger.LogInformation("List function triggered.");
             var tenders = HttpService.GetTenders().Result;
