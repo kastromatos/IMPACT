@@ -7,6 +7,13 @@ permissions:
   id-token: write
   contents: read
 
+env:
+  location: polandcentral
+  rg_name: impcat
+  sa_name: impactuniquesa
+  ai_name: impactinsight
+  af_name: impactfunction
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -20,9 +27,20 @@ jobs:
         tenant-id: ${{ secrets.TENANT_ID }}
         subscription-id: ${{ secrets.SUBS_ID }}
 
-    - name: Azure CLI script
+    - name: Deploy base infrastructure
       uses: azure/cli@v2
       with:
         azcliversion: latest
         inlineScript: |
-          az account show
+          az group create --name ${{ env.rg_name }} --location ${{ env.location }}
+          az storage account create --name ${{ env.sa_name }} --location ${{ env.location }} --resource-group ${{ env.rg_name }} --sku Standard_LRS
+          az monitor app-insights component create --app ${{ env.ai_name }} --location ${{ env.location }} --resource-group ${{ env.rg_name }} --retention-time 30
+          az functionapp create --name ${{ env.af_name }} --resource-group ${{ env.rg_name }} --storage-account ${{ env.sa_name }}
+          az monitor app-insights component connect-function --resource-group ${{ env.rg_name }} --app ${{ env.ai_name }} --function ${{ env.af_name }}
+
+    - name: Check tools
+      uses: azure/cli@v2
+      with:
+        azcliversion: latest
+        inlineScript: |
+          func --version
