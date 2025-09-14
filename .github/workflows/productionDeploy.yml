@@ -1,8 +1,7 @@
 name: IMPACT production deploy
 
-on:
-  workflow_dispatch:
-
+on: push
+  
 permissions:
   id-token: write
   contents: read
