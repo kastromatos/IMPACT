@@ -3,44 +3,44 @@ using Newtonsoft.Json;
 
 namespace Tenders
 {
-  public class HttpService
-  {
-    private static readonly HttpClient client = new HttpClient();
-    private const int MAX_PAGE = 100;
-
-    static HttpService()
+    public class HttpService
     {
-      client.BaseAddress = new Uri("https://tenders.guru/api/pl/");
-    }
+        private static readonly HttpClient client = new HttpClient();
+        private const int MAX_PAGE = 100;
 
-    private readonly IMemoryCache _memoryCache;
-
-    public HttpService(IMemoryCache memoryCache)
-    {
-      _memoryCache = memoryCache;
-    }
-
-    public async Task<Tenders> GetPageOfTenders(int page = 1)
-    {
-      if (page < 1 || page >= MAX_PAGE) return new Tenders();
-
-      string cacheKey = $"Page_{page}";
-      if (!_memoryCache.TryGetValue(cacheKey, out Tenders tenders))
-      {
-        HttpResponseMessage response = client.GetAsync($"tenders?page={page}").Result;
-        string jsonBody = await response.Content.ReadAsStringAsync();
-        tenders = JsonConvert.DeserializeObject<Tenders>(jsonBody);
-
-        var cacheOptions = new MemoryCacheEntryOptions
+        static HttpService()
         {
-          AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20),
-          SlidingExpiration = TimeSpan.FromMinutes(5)
-        };
+            client.BaseAddress = new Uri("https://tenders.guru/api/pl/");
+        }
 
-        _memoryCache.Set(cacheKey, tenders, cacheOptions);
-      }
+        private readonly IMemoryCache _memoryCache;
 
-      return tenders;
+        public HttpService(IMemoryCache memoryCache)
+        {
+            _memoryCache = memoryCache;
+        }
+
+        public async Task<Tenders> GetPageOfTenders(int page = 1)
+        {
+            if (page < 1 || page >= MAX_PAGE) return new Tenders();
+
+            string cacheKey = $"Page_{page}";
+            if (!_memoryCache.TryGetValue(cacheKey, out Tenders tenders))
+            {
+                HttpResponseMessage response = client.GetAsync($"tenders?page={page}").Result;
+                string jsonBody = await response.Content.ReadAsStringAsync();
+                tenders = JsonConvert.DeserializeObject<Tenders>(jsonBody);
+
+                var cacheOptions = new MemoryCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20),
+                    SlidingExpiration = TimeSpan.FromMinutes(5)
+                };
+
+                _memoryCache.Set(cacheKey, tenders, cacheOptions);
+            }
+
+            return tenders;
+        }
     }
-  }
 }

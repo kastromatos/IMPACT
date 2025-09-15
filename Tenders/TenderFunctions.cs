@@ -21,18 +21,18 @@ namespace Tenders
         public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "tenders")] HttpRequest req)
         {
             _logger.LogInformation("Get tenders function triggered.");
-            var tenders = Int32.TryParse(req.Query["page"], out int page) 
+            var tenders = Int32.TryParse(req.Query["page"], out int page)
                                 ? _httpService.GetPageOfTenders(page).Result
                                 : _httpService.GetPageOfTenders().Result;
             return new OkObjectResult(tenders);
         }
 
-    //[Function("GetById")]
-    //public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "tenders/{id}")] HttpRequest req, int id)
-    //{
-    //    _logger.LogInformation("GetById function triggered.");
-    //    var tenders = HttpService.GetTenders().Result;
-    //    return new OkObjectResult(tenders);
-    //}
-  }
+        //[Function("GetById")]
+        //public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "tenders/{id}")] HttpRequest req, int id)
+        //{
+        //    _logger.LogInformation("GetById function triggered.");
+        //    var tenders = HttpService.GetTenders().Result;
+        //    return new OkObjectResult(tenders);
+        //}
+    }
 }
