@@ -14,11 +14,10 @@ namespace Tenders
         {
             _logger = logger;
             _httpService = httpService;
-
         }
 
         [Function("FirstOrAnyPage")]
-        public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "tenders")] HttpRequest req)
+        public IActionResult GetAll([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "tenders")] HttpRequest req)
         {
             _logger.LogInformation("Get tenders function triggered.");
             var tenders = Int32.TryParse(req.Query["page"], out int page)
@@ -27,12 +26,12 @@ namespace Tenders
             return new OkObjectResult(tenders);
         }
 
-        //[Function("GetById")]
-        //public IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "tenders/{id}")] HttpRequest req, int id)
-        //{
-        //    _logger.LogInformation("GetById function triggered.");
-        //    var tenders = HttpService.GetTenders().Result;
-        //    return new OkObjectResult(tenders);
-        //}
+        [Function("GetTenderById")]
+        public IActionResult GetSingle([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "tenders/{id}")] HttpRequest req, int id)
+        {
+            _logger.LogInformation("GetById function triggered.");
+            var tender = _httpService.GetTenderById(id).Result;
+            return new OkObjectResult(tender);
+        }
     }
 }

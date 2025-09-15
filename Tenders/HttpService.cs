@@ -42,5 +42,17 @@ namespace Tenders
 
             return tenders;
         }
+
+        public async Task<Tender> GetTenderById (int id)
+        {
+            Tender tender = new Tender();
+            for (int page = 1; page < MAX_PAGE; page++)
+            {
+                var tenders = await GetPageOfTenders(page);
+                tender = tenders.TendersList.FirstOrDefault(x => x.id == id);
+                if (tender == null) { continue; } else { return tender; }
+            }
+            return tender;
+        }
     }
 }
