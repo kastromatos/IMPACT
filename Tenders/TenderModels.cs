@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Tenders
 {
-  internal class Tender
+  public class Tender
   {
     public string id { get; set; }
     public string date { get; set; }
@@ -15,7 +15,7 @@ namespace Tenders
     public string category { get; set; }
   }
 
-  internal class Tenders
+  public class Tenders
   {
     public Tenders() => TendersList = new List<Tender>();
 

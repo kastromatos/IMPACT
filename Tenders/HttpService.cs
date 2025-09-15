@@ -1,26 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 
 namespace Tenders
 {
-  internal class HttpService
+  public class HttpService
   {
     private static readonly HttpClient client = new HttpClient();
+    private const int MAX_PAGE = 100;
 
     static HttpService()
     {
       client.BaseAddress = new Uri("https://tenders.guru/api/pl/");
     }
 
-    public static async Task<Tenders> GetTenders()
+    private readonly IMemoryCache _memoryCache;
+
+    public HttpService(IMemoryCache memoryCache)
     {
-      HttpResponseMessage response = client.GetAsync("tenders").Result;
-      string jsonBody = await response.Content.ReadAsStringAsync();
-      return JsonConvert.DeserializeObject<Tenders>(jsonBody);
+      _memoryCache = memoryCache;
+    }
+
+    public async Task<Tenders> GetPageOfTenders(int page = 1)
+    {
+      if (page < 1 || page >= MAX_PAGE) return new Tenders();
+
+      string cacheKey = $"Page_{page}";
+      if (!_memoryCache.TryGetValue(cacheKey, out Tenders tenders))
+      {
+        HttpResponseMessage response = client.GetAsync($"tenders?page={page}").Result;
+        string jsonBody = await response.Content.ReadAsStringAsync();
+        tenders = JsonConvert.DeserializeObject<Tenders>(jsonBody);
+
+        var cacheOptions = new MemoryCacheEntryOptions
+        {
+          AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(20),
+          SlidingExpiration = TimeSpan.FromMinutes(5)
+        };
+
+        _memoryCache.Set(cacheKey, tenders, cacheOptions);
+      }
+
+      return tenders;
     }
   }
 }
