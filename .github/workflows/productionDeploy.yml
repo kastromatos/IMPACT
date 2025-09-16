@@ -12,6 +12,9 @@ env:
   sa_name: impactuniquesa
   # ai_name: impactinsight
   af_name: impactfunctionwithuniquename
+  # apim_name: impactapim
+  # publisher_email: kastro.matos@hotmail.com
+  # publisher_org: Impact
 
 jobs:
 
@@ -40,9 +43,17 @@ jobs:
           # az monitor app-insights component create --app ${{ env.ai_name }} --location ${{ env.location }} --resource-group ${{ env.rg_name }} --retention-time 30
           # az monitor app-insights component connect-function --resource-group ${{ env.rg_name }} --app ${{ env.ai_name }} --function ${{ env.af_name }}
 
+    # should be cached
     - run: sudo apt-get install azure-functions-core-tools-4
       name: Install core tools
 
     - run: func azure functionapp publish ${{ env.af_name }} --dotnet-isolated
       working-directory: Tenders
-      name: Deploy
+      name: Deploy function
+
+    # - name: Deploy apim
+    #   uses: azure/cli@v2
+    #   with:
+    #     azcliversion: latest
+    #     inlineScript: |
+    #       az apim create --name ${{ env.apim_name }} --resource-group ${{ env.rg_name }} --location ${{ env.location }} --publisher-email ${{ env.publisher_email }} --publisher-name ${{ env.publisher_org }} --sku-name Consumption --no-wait
