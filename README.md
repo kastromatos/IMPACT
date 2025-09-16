@@ -4,15 +4,17 @@ IMPACT TENDERS REST API
 # Features
 
 - CICD
+- OpenID auth
 - Minimized costs
 - Easy to validate/test/work locally
+- Easy to read/expand/maintain
 - Cache
 - Pagination
 - Cross pages ID search
 
 # Response specs
 
-### Local test & response fields: http://localhost:7053/api/tenders/585088
+### Local test & response fields: /api/tenders/585088
 ```
 {
 	"id": 585088,
